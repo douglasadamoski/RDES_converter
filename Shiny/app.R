@@ -12,7 +12,14 @@ ui <- fluidPage(
     sidebarPanel(
       # Input: Select equipment ----
       h4(""),
+      h4(""),
       tags$a(href="https://github.com/douglasadamoski/RDES_converter", "Source code @GitHub"),
+      h4(""),
+      h4(""),
+      tags$a(href="https://github.com/douglasadamoski/RDES_converter/raw/main/ExampleFile/Example2022-09-23_120054.xls", "Download Example File"),
+      h6("Example file was exported from a Applied Biosystems QuantStudio™ 5 System"),
+      h4(""),
+      h4(""),
       h4(""),
       selectInput(inputId = "qpcr_equipment",
                   label = "Select your qPCR equipment export:",
