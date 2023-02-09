@@ -11,6 +11,9 @@ ui <- fluidPage(
     # Sidebar panel for inputs ----
     sidebarPanel(
       # Input: Select equipment ----
+      h4(""),
+      tags$a(href="https://github.com/douglasadamoski/RDES_converter", "Source code @GitHub"),
+      h4(""),
       selectInput(inputId = "qpcr_equipment",
                   label = "Select your qPCR equipment export:",
                   choices = c(
