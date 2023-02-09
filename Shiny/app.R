@@ -54,7 +54,7 @@ server <- function(input, output) {
   if(input$qpcr_equipment == "applied_quantstudio5_v1"){
     
     #
-    AmplificationData <- read_excel(#path="2022-09-23_120054.xls",
+    AmplificationData <- read_excel(#path="./../ExampleFile/Example2022-09-23_120054.xls",
                      path=input$file1$datapath,
                      sheet = "Amplification Data",
                      range = NULL, col_names = TRUE, col_types = NULL,
@@ -97,7 +97,7 @@ server <- function(input, output) {
 
     # Add other column information from Sample Setup
     #
-    SampleSetupData <- read_excel(#path="2022-09-23_120054.xls",
+    SampleSetupData <- read_excel(#path="./../ExampleFile/Example2022-09-23_120054.xls",
                                     path=input$file1$datapath,
                                     sheet = "Sample Setup",
                                     range = NULL, col_names = TRUE, col_types = NULL,
@@ -121,19 +121,56 @@ server <- function(input, output) {
       df[i, "Sample"] <-       SampleSetupData[which(SampleSetupData$`Well Position` == df[i, "Well"] &
                                                        SampleSetupData$`Target Name` == df[i, "Target"]), "Sample Name"]
       
-      df[i, "Sample Type"]    <-  "unkn"
+      df[i, "Sample Type"]    <-  SampleSetupData[which(SampleSetupData$`Well Position` == df[i, "Well"] &
+                                                          SampleSetupData$`Target Name` == df[i, "Target"]), "Task"]
       
       df[i, "Target Type"]   <-  "toi"
       
       df[i, "Dye"]   <-  SampleSetupData[which(SampleSetupData$`Well Position` == df[i, "Well"] &
                                                  SampleSetupData$`Target Name` == df[i, "Target"]), "Reporter"]
 
-      df[i, "Cq"]   <-  ""
+      #df[i, "Cq"]   <-  ""
     }
 
+    
+    
+    
+    
+    
+    # Add other column information from Results Setup
+    #
+    ResultsData <- read_excel(#path="./../ExampleFile/Example2022-09-23_120054.xls",
+      path=input$file1$datapath,
+      sheet = "Results",
+      range = NULL, col_names = TRUE, col_types = NULL,
+      na = "", trim_ws = TRUE,
+      skip = 0, n_max = Inf,
+      #guess_max = min(1000, n_max),
+      #progress = readxl_progress(),
+      .name_repair = "unique" 
+    )
+    
+    #
+    as.data.frame(ResultsData) -> ResultsData
+    ResultsData <- ResultsData[grep("Well", ResultsData$`Block Type`):dim(ResultsData)[1],]
+    colnames(ResultsData) <- ResultsData[1,]
+    ResultsData <- ResultsData[-1,]
+    
+    # Loop to fill
+    for(i in 1:dim(df)[1]){
+      
+      df[i, "Cq"]   <-  ResultsData[which(ResultsData$`Well Position` == df[i, "Well"] &
+                                            ResultsData$`Target Name` == df[i, "Target"]), "CT"]
+      
+    }
+    
+    # Change to remove "Undetermined" to NAs
+    as.numeric(df[, "Cq"]) -> df[, "Cq"]
+    
     #
     remove(SampleSetupData)
     remove(AmplificationData)
+    remove(ResultsData)
     
     # return
     return(df)
