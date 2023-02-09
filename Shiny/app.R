@@ -71,7 +71,7 @@ server <- function(input, output) {
     AmplificationData <- AmplificationData[-1,]
 
     # Create a dataframe
-    x <- c("Well", "Sample", "Sample Type", "Target", "Target Type", "Dye", unique(AmplificationData$Cycle) )
+    x <- c("Well", "Sample", "Sample Type", "Target", "Target Type", "Dye", "Cq", unique(AmplificationData$Cycle) )
     df <- data.frame(matrix(ncol = length(x), nrow = 0))
     colnames(df) <- x
     
@@ -121,14 +121,14 @@ server <- function(input, output) {
       df[i, "Sample"] <-       SampleSetupData[which(SampleSetupData$`Well Position` == df[i, "Well"] &
                                                        SampleSetupData$`Target Name` == df[i, "Target"]), "Sample Name"]
       
-      df[i, "Sample Type"]    <-  SampleSetupData[which(SampleSetupData$`Well Position` == df[i, "Well"] &
-                                                         SampleSetupData$`Target Name` == df[i, "Target"]), "Task"]
+      df[i, "Sample Type"]    <-  "unkn"
       
-      df[i, "Target Type"]   <-  ""
+      df[i, "Target Type"]   <-  "toi"
       
       df[i, "Dye"]   <-  SampleSetupData[which(SampleSetupData$`Well Position` == df[i, "Well"] &
                                                  SampleSetupData$`Target Name` == df[i, "Target"]), "Reporter"]
 
+      df[i, "Cq"]   <-  ""
     }
 
     #
